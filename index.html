@@ -555,11 +555,11 @@
                 
                 // AJUSTE DE TEXTO 2 (Flecha y sintaxis)
                 savings.innerHTML = `
-                    **El costo es menor usando la Tasa Promedio.**
+                    **El costo es menor usando la Tasa Promedio**
                     <span class="text-xs block mt-1">
                         Ahorro Total: 
                         <span class="text-yellow-300">${vesFormat(diffVes)}</span>
-                        (aprox. <span class="${color}">$ ${usdFormatNoSymbol(diffUsd)}</span>) 
+                        <br/>(aprox. <span class="${color}">$ ${usdFormatNoSymbol(diffUsd)}</span>) 
                         <span class="font-bold">→</span>
                         <span class="${color} text-xs"> ${percFormat(diffPerc)}% menos</span>.
                     </span>
@@ -578,11 +578,11 @@
                 
                 // AJUSTE DE TEXTO 2 (Flecha y sintaxis)
                 savings.innerHTML = `
-                    **El costo es menor usando la Tasa Oficial (BCV).**
+                    **El costo es menor usando la Tasa Oficial**
                     <span class="text-xs block mt-1">
                         Ahorro Total: 
                         <span class="text-green-300">${vesFormat(diffVes)}</span>
-                        (aprox. <span class="${color}">$ ${usdFormatNoSymbol(diffUsd)}</span>) 
+                        <br/>(aprox. <span class="${color}">$ ${usdFormatNoSymbol(diffUsd)}</span>) 
                         <span class="font-bold">→</span>
                         <span class="${color} text-xs"> ${percFormat(diffPerc)}% menos</span>.
                     </span>
