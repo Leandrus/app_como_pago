@@ -1,7 +1,7 @@
 {
-  "name": "Calculadora Pagos VE",
-  "short_name": "CalcVE",
-  "description": "Calculadora de pagos y conversión de tasas de moneda en Venezuela.",
+  "name": "Calculadora de Pagos en Venezuela",
+  "short_name": "¿Como Pago?",
+  "description": "Calculadora de pagos según conversión de tasas de Dólares en Venezuela.",
   "start_url": "./index.html",
   "display": "standalone",
   "orientation": "portrait",

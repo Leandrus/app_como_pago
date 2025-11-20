@@ -11,6 +11,7 @@
    sodipodi:docname="favico.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <sodipodi:namedview
@@ -24,8 +25,8 @@
      inkscape:deskcolor="#505050"
      inkscape:document-units="px"
      inkscape:zoom="2"
-     inkscape:cx="53.5"
-     inkscape:cy="56.75"
+     inkscape:cx="239"
+     inkscape:cy="158.25"
      inkscape:window-width="1366"
      inkscape:window-height="697"
      inkscape:window-x="1432"
@@ -33,7 +34,29 @@
      inkscape:window-maximized="1"
      inkscape:current-layer="layer1" />
   <defs
-     id="defs1" />
+     id="defs1">
+    <linearGradient
+       id="linearGradient2"
+       inkscape:collect="always">
+      <stop
+         style="stop-color:#ffcc00;stop-opacity:1"
+         offset="0"
+         id="stop2" />
+      <stop
+         style="stop-color:#4ade80;stop-opacity:1;"
+         offset="1"
+         id="stop3" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2"
+       id="linearGradient3"
+       x1="13.229165"
+       y1="12.200178"
+       x2="13.229165"
+       y2="14.258162"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
   <g
      inkscape:label="Capa 1"
      inkscape:groupmode="layer"
@@ -45,13 +68,13 @@
        sodipodi:nodetypes="ccccc" />
     <text
        xml:space="preserve"
-       style="font-size:27.4804px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#008000;fill-opacity:1;stroke:#ffcc00;stroke-width:0.96375;paint-order:fill markers stroke"
+       style="font-size:27.4804px;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:url(#linearGradient3);fill-opacity:1;stroke:#ffffff;stroke-width:0.96375;paint-order:fill markers stroke"
        x="13.229166"
        y="23.292789"
        id="text2"><tspan
          sodipodi:role="line"
          id="tspan2"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Audex;-inkscape-font-specification:Audex;fill:#008000;stroke:#ffcc00;stroke-width:0.96375;paint-order:fill markers stroke"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Audex;-inkscape-font-specification:Audex;fill:url(#linearGradient3);stroke:#ffffff;stroke-width:0.96375;paint-order:fill markers stroke;fill-opacity:1"
          x="13.229166"
          y="23.292789">$</tspan></text>
   </g>

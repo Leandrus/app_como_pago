@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Calculadora de Pagos VE</title>
+    <title>Calculadora de Pagos en Venezuela</title>
 
     <!-- --- FAVICON SVG START: Ícono de Dinero/Cálculo Brillante (Ahora externo) --- -->
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -14,7 +14,7 @@
     <meta name="theme-color" content="#0f172a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="CalcVE">
+    <meta name="apple-mobile-web-app-title" content="¿Como Pago?">
     <!-- --- PWA CONFIGURATION END --- -->
 
     <!-- Tailwind CSS -->
@@ -103,8 +103,8 @@
         
         <!-- Header -->
         <header class="text-center mb-6">
-            <h1 class="text-2xl font-bold text-blue-400">Calculadora de Pagos</h1>
-            <p class="text-xs text-slate-400 mt-1">Compara costos de ofertas de precios para el mismo producto.</p>
+            <h1 class="text-2xl font-bold text-blue-400">Calculadora de Pagos en Venezuela</h1>
+            <p class="text-xs text-slate-400 mt-1">Comparación de precios para el mismo producto.</p>
         </header>
 
         <!-- Sección de Tasas (Rates) -->
@@ -112,7 +112,7 @@
             <!-- BCV (TASA OFICIAL - Verde) -->
             <div class="card p-3 flex flex-col justify-between relative group">
                 <div class="flex justify-between items-center">
-                    <span class="text-xs font-semibold tracking-wider text-green-400">TASA OFICIAL (BCV)</span>
+                    <span class="text-xs font-semibold tracking-wider text-green-400">TASA OFICIAL</span>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-slate-500 opacity-50 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                     </svg>
@@ -127,7 +127,7 @@
             <!-- USDT (TASA BINANCE - Amarillo) -->
             <div class="card p-3 flex flex-col justify-between relative group">
                 <div class="flex justify-between items-center">
-                    <span class="text-xs font-semibold tracking-wider text-yellow-400">TASA BINANCE (P2P)</span>
+                    <span class="text-xs font-semibold tracking-wider text-yellow-400">TASA BINANCE</span>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-slate-500 opacity-50 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                     </svg>
@@ -142,13 +142,13 @@
 
         <!-- Diferencia de Tasas -->
         <div class="text-center text-xs text-slate-500">
-            Diferencia BCV vs P2P: <span id="rateDiff">Calculando...</span>
+            Diferencia: <span id="rateDiff">Calculando...</span>
         </div>
 
         <!-- Tasa Promedio Calculada (Editable) -->
         <section class="card p-4 border-blue-500/30 shadow-[0_0_15px_rgba(59,130,246,0.1)]">
             <div class="flex justify-between items-center mb-2">
-                <label for="avgRateInput" class="text-sm font-medium text-blue-300">Tasa de Dólares Físicos (Promedio)</label>
+                <label for="avgRateInput" class="text-sm font-medium text-blue-300">Tasa Promedio</label>
                 <!-- FÓRMULA ACTUALIZADA -->
                 <span class="text-[10px] bg-blue-900/50 text-blue-200 px-2 py-1 rounded">Fórmula: ((BCV + P2P) / 2) + 10%</span>
             </div>
@@ -165,7 +165,7 @@
             
             <!-- Opción 1: Oferta con Tasa Oficial (BCV) - Verde -->
             <div>
-                <label class="block text-xs mb-1 ml-1 font-semibold text-green-400">1. Precio de la Oferta en Bolívares (Tasa Oficial)</label>
+                <label class="block text-xs mb-1 ml-1 font-semibold text-green-400">Precio de pago en Bolívares</label>
                 <div class="input-group">
                     <!-- Campo USD (Principal - Editable) -->
                     <div class="relative">
@@ -182,7 +182,7 @@
 
             <!-- Opción 2: Oferta con Tasa PROMEDIO (Dólares Físicos) - Amarillo -->
             <div>
-                <label class="block text-xs mb-1 ml-1 font-semibold text-yellow-400">2. Precio de la Oferta en Dólares Físicos (Tasa Promedio)</label>
+                <label class="block text-xs mb-1 ml-1 font-semibold text-yellow-400">Precio de pago en Dólares Físicos</label>
                 <div class="input-group">
                     <!-- Campo USD (Principal - Editable) -->
                     <div class="relative">
