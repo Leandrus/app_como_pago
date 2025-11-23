@@ -2,10 +2,9 @@
   "name": "¿Como Pago en Venezuela?",
   "short_name": "¿Como Pago?",
   "description": "Calculadora de comparación de precios y tasas BCV/USDT para Venezuela.",
-  "id": "https://leandrus.github.io/app_calculadora_pagos_ve/",
   "start_url": "https://leandrus.github.io/app_calculadora_pagos_ve/index.html",
-  "scope": "https://leandrus.github.io/app_calculadora_pagos_ve/",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
   "icons": [
