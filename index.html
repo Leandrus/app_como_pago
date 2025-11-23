@@ -1,199 +1,707 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>¿Como Pago?</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>¿Como Pago?</title>
 
-    <!-- --- FAVICON SVG START: Ícono de Dinero/Cálculo Brillante (Ahora externo) --- -->
-    <link rel="icon" href="icons/favicon.png" type="image">
-    <!-- --- FAVICON SVG END --- -->
-
-    <!-- --- PWA CONFIGURATION START --- -->
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0f172a">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="¿Como Pago?">
-    <!-- --- PWA CONFIGURATION END --- -->
-
-	<!-- --- Logica en JavaScript para calculos --- -->
-	<script src="como_pago.js"></script>
+	<!-- --- CONFIGURACIÓN PWA Y ENLACES DE ESTILO --- -->
 	
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+	<!-- FAVICON (Usando la imagen favicon.png en la carpeta icons) -->
+	<link rel="icon" type="image/png" href="icons/favicon.png">
 	
-    <!-- Fuente Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-	<!-- Estilos personalizados -->
-    <link rel="stylesheet" href="style.css">
+	<!-- PWA CONFIGURATION: Nombres y Temas ajustados -->
+	<link rel="manifest" href="manifest.json">
+	<meta name="theme-color" content="#0f172a">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<meta name="apple-mobile-web-app-title" content="¿Como Pago?">
+	
+	<!-- Tailwind CSS CDN (para simplificar estilos) -->
+	<script src="https://cdn.tailwindcss.com"></script>
+	<!-- Fuente Inter -->
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+	
+	<!-- CSS INTERNO: Simulación de style.css -->
+	<style>
+		body {
+			font-family: 'Inter', sans-serif;
+			background-color: #0f172a; /* Slate 900 */
+			color: #e2e8f0; /* Slate 200 */
+		}
+		/* Eliminar flechas de input number */
+		input[type=number]::-webkit-inner-spin-button, 
+		input[type=number]::-webkit-outer-spin-button { 
+			-webkit-appearance: none; 
+			margin: 0; 
+		}
+		.card {
+			background-color: #1e293b; /* Slate 800 */
+			border: 1px solid #334155;
+			border-radius: 12px;
+		}
+		.input-dark {
+			background-color: #0f172a;
+			border: 1px solid #334155;
+			color: white;
+			transition: all 0.2s;
+		}
+		.input-dark:focus {
+			border-color: #3b82f6;
+			outline: none;
+			box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+		}
+		/* Estilo especial para campos editables principales (Tasas) */
+		.input-editable {
+			background-color: rgba(30, 41, 59, 0.5);
+			border: 1px dashed #475569;
+			color: white;
+			transition: all 0.2s;
+			cursor: text;
+		}
+		.input-editable:focus {
+			background-color: #0f172a;
+			border-color: #3b82f6;
+			border-style: solid;
+			outline: none;
+		}
+		/* Estilo para inputs de solo lectura (Costo en VES calculado) */
+		.input-readonly {
+			background-color: #273447 !important; /* Un poco más claro para distinguirlo */
+			border: 1px solid #475569 !important;
+			cursor: default !important;
+			color: #94a3b8 !important; /* Color gris suave */
+		}
+		.btn-primary {
+			background: linear-gradient(to right, #3b82f6, #2563eb);
+		}
+		.btn-secondary {
+			background-color: #475569; /* Slate 600 */
+			border: 1px solid #64748b;
+		}
+		.btn-primary:active, .btn-secondary:active {
+			transform: scale(0.98);
+		}
+		/* Estilos para el nuevo input 2-en-1 */
+		.input-group {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 4px;
+		}
+		.input-group input {
+			text-align: center;
+			height: 48px;
+		}
+		/* Colores actualizados para los pares de inputs */
+		.input-usd-green {
+			 color: #34d399; /* emerald-400 (verde) */
+			 font-weight: 700;
+		}
+		.input-usd-yellow {
+			color: #fcd34d; /* yellow-300 (amarillo) */
+			font-weight: 700;
+		}
+	</style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-4">
 
-    <main class="w-full max-w-md space-y-4">
-        
-        <!-- Header -->
-        <header class="text-center mb-6">
-            <h1 class="text-2xl font-bold text-blue-400">¿Como Pago?</h1>
-            <p class="text-xs text-slate-400 mt-1">Calculadora para comparación de precios de un mismo producto y promedio de compra para dólares físicos.</p>
-        </header>
+	<main class="w-full max-w-md space-y-4">
+		
+		<!-- Header -->
+		<header class="text-center mb-6">
+			<h1 class="text-2xl font-bold text-blue-400">¿Como Pago?</h1>
+			<p class="text-xs text-slate-400 mt-1">Calculadora para comparación de precios y promedio de compra para dólares físicos.</p>
+		</header>
 
-        <!-- ============================================== -->
-        <!-- SECCIÓN 1: ENTRADA DE DATOS (SECTION 1) -->
-        <!-- ============================================== -->
-        <div id="section1" class="space-y-4">
-            
-            <!-- Sección de Tasas (Rates) -->
-            <section class="grid grid-cols-2 gap-3">
-                <!-- BCV (TASA OFICIAL - Verde) -->
-                <div class="card p-3 flex flex-col justify-between relative group">
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs font-semibold tracking-wider text-green-400">TASA OFICIAL</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-slate-500 opacity-50 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                        </svg>
-                    </div>
-                    <div class="flex items-baseline mt-1">
-                        <span class="text-lg font-bold text-green-400 mr-1">Bs.</span>
-                        <input type="number" step="0.01" id="bcvDisplay" class="input-editable w-full text-xl font-bold rounded px-1 focus:outline-none text-green-400" placeholder="0.00">
-                    </div>
-                    <div id="bcvLoader" class="absolute top-3 right-3 opacity-0 animate-spin h-3 w-3 border-2 border-blue-500 rounded-full border-t-transparent transition-opacity duration-300"></div>
-                </div>
+		<!-- ============================================== -->
+		<!-- SECCIÓN 1: ENTRADA DE DATOS (INPUTS) -->
+		<!-- ============================================== -->
+		<div id="section1" class="space-y-4">
+			
+			<!-- Sección de Tasas (Rates) -->
+			<section class="grid grid-cols-2 gap-3">
+				<!-- BCV (TASA OFICIAL - Verde) -->
+				<div class="card p-3 flex flex-col justify-between relative group">
+					<div class="flex justify-between items-center">
+						<span class="text-xs font-semibold tracking-wider text-green-400">TASA OFICIAL</span>
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-slate-500 opacity-50 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+						</svg>
+					</div>
+					<div class="flex items-baseline mt-1">
+						<span class="text-lg font-bold text-green-400 mr-1">Bs.</span>
+						<input type="number" step="0.01" id="bcvDisplay" class="input-editable w-full text-xl font-bold rounded px-1 focus:outline-none text-green-400" placeholder="0.00">
+					</div>
+					<div id="bcvLoader" class="absolute top-3 right-3 opacity-0 animate-spin h-3 w-3 border-2 border-blue-500 rounded-full border-t-transparent transition-opacity duration-300"></div>
+				</div>
 
-                <!-- USDT (TASA BINANCE - Amarillo) -->
-                <div class="card p-3 flex flex-col justify-between relative group">
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs font-semibold tracking-wider text-yellow-400">TASA BINANCE</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-slate-500 opacity-50 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                        </svg>
-                    </div>
-                    <div class="flex items-baseline mt-1">
-                        <span class="text-lg font-bold text-yellow-400 mr-1">Bs.</span>
-                        <input type="number" step="0.01" id="usdtDisplay" class="input-editable w-full text-xl font-bold rounded px-1 focus:outline-none text-yellow-400" placeholder="0.00">
-                    </div>
-                    <div id="usdtLoader" class="absolute top-3 right-3 opacity-0 animate-spin h-3 w-3 border-2 border-blue-500 rounded-full border-t-transparent transition-opacity duration-300"></div>
-                </div>
-            </section>
+				<!-- USDT (TASA BINANCE/P2P - Amarillo) -->
+				<div class="card p-3 flex flex-col justify-between relative group">
+					<div class="flex justify-between items-center">
+						<span class="text-xs font-semibold tracking-wider text-yellow-400">TASA BINANCE</span>
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-slate-500 opacity-50 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+						</svg>
+					</div>
+					<div class="flex items-baseline mt-1">
+						<span class="text-lg font-bold text-yellow-400 mr-1">Bs.</span>
+						<input type="number" step="0.01" id="usdtDisplay" class="input-editable w-full text-xl font-bold rounded px-1 focus:outline-none text-yellow-400" placeholder="0.00">
+					</div>
+					<div id="usdtLoader" class="absolute top-3 right-3 opacity-0 animate-spin h-3 w-3 border-2 border-blue-500 rounded-full border-t-transparent transition-opacity duration-300"></div>
+				</div>
+			</section>
 
-            <!-- Diferencia de Tasas -->
-            <div class="text-center text-xs text-slate-500">
-                Diferencia: <span id="rateDiff">Calculando...</span>
-            </div>
+			<!-- Diferencia de Tasas (Informativo) -->
+			<div class="text-center text-xs text-slate-500">
+				Diferencia: <span id="rateDiff">Calculando...</span>
+			</div>
 
-            <!-- Tasa Promedio Calculada (Editable) -->
-            <section class="card p-4 border-blue-500/30 shadow-[0_0_15px_rgba(59,130,246,0.1)]">
-                <div class="flex justify-between items-center mb-2">
-                    <label for="avgRateInput" class="text-sm font-medium text-blue-300">Tasa Promedio de Compra (Físicos)</label>
-                    <!-- FÓRMULA OCULTA -->
-                </div>
-                <div class="relative">
-                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">Bs.</span>
-                    <input type="number" step="0.01" id="avgRateInput" class="input-dark w-full p-3 pl-10 rounded-lg text-xl font-bold text-center" placeholder="0.00">
-                </div>
-            </section>
+			<!-- Tasa Promedio Calculada (Editable) -->
+			<section class="card p-4 border-blue-500/30 shadow-[0_0_15px_rgba(59,130,246,0.1)]">
+				<div class="flex justify-between items-center mb-2">
+					<label for="avgRateInput" class="text-sm font-medium text-blue-300">Tasa Promedio de Compra (Físicos)</label>
+					<!-- NOTA: El cálculo por defecto es (BCV + USDT)/2 * 1.10. El usuario puede modificarlo. -->
+				</div>
+				<div class="relative">
+					<span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">Bs.</span>
+					<input type="number" step="0.01" id="avgRateInput" class="input-dark w-full p-3 pl-10 rounded-lg text-xl font-bold text-center" placeholder="0.00">
+				</div>
+			</section>
 
-            <hr class="border-slate-700 my-2">
+			<hr class="border-slate-700 my-2">
 
-            <!-- Inputs de Precios CONVERSIÓN BCV vs PROMEDIO -->
-            <section class="space-y-3">
-                
-                <!-- Opción 1: Oferta con Tasa Oficial (BCV) - Verde -->
-                <div>
-                    <label class="block text-xs mb-1 ml-1 font-semibold text-green-400">Precio de pago en Bolívares</label>
-                    <div class="input-group">
-                        <!-- Campo USD (Principal - Editable) -->
-                        <div class="relative">
-                            <input type="number" id="price_bcv_usd_input" class="input-dark input-usd-green w-full p-3 rounded-lg text-lg" placeholder="0.00">
-                            <span class="absolute left-1 top-1/2 -translate-y-1/2 font-bold text-sm text-green-400">$</span>
-                        </div>
-                        <!-- Campo VES (Calculado con BCV - Solo lectura) -->
-                        <div class="relative">
-                            <input type="text" id="price_bcv_ves_input" class="input-dark input-readonly w-full p-3 rounded-lg text-lg text-green-400 font-bold" readonly placeholder="0.00">
-                            <span class="absolute right-1 top-1/2 -translate-y-1/2 font-bold text-sm text-green-400">Bs.</span>
-                        </div>
-                    </div>
-                </div>
+			<!-- Inputs de Precios CONVERSIÓN BCV vs PROMEDIO -->
+			<section class="space-y-3">
+				
+				<!-- Opción 1: Oferta con Tasa Oficial (BCV) - Verde/Azul -->
+				<div>
+					<label class="block text-xs mb-1 ml-1 font-semibold text-green-400">Precio de pago en Bolívares (Tasa Oficial)</label>
+					<div class="input-group">
+						<!-- Campo USD (Principal - Editable) -->
+						<div class="relative">
+							<input type="number" id="price_bcv_usd_input" class="input-dark input-usd-green w-full p-3 rounded-lg text-lg" placeholder="0.00">
+							<span class="absolute left-1 top-1/2 -translate-y-1/2 font-bold text-sm text-green-400">$</span>
+						</div>
+						<!-- Campo VES (Calculado con BCV - Solo lectura) -->
+						<div class="relative">
+							<input type="text" id="price_bcv_ves_input" class="input-dark input-readonly w-full p-3 rounded-lg text-lg text-green-400 font-bold" readonly placeholder="0.00">
+							<span class="absolute right-1 top-1/2 -translate-y-1/2 font-bold text-sm text-green-400">Bs.</span>
+						</div>
+					</div>
+				</div>
 
-                <!-- Opción 2: Oferta con Tasa PROMEDIO (Dólares Físicos) - Amarillo -->
-                <div>
-                    <label class="block text-xs mb-1 ml-1 font-semibold text-yellow-400">Precio de pago en Dólares Físicos</label>
-                    <div class="input-group">
-                        <!-- Campo USD (Principal - Editable) -->
-                        <div class="relative">
-                            <input type="number" id="price_avg_usd_input" class="input-dark input-usd-yellow w-full p-3 rounded-lg text-lg" placeholder="0.00">
-                            <span class="absolute left-1 top-1/2 -translate-y-1/2 font-bold text-sm text-yellow-400">$</span>
-                        </div>
-                        <!-- Campo VES (Calculado con Promedio - Solo lectura) -->
-                        <div class="relative">
-                            <input type="text" id="price_avg_ves_input" class="input-dark input-readonly w-full p-3 rounded-lg text-lg text-yellow-400 font-bold" readonly placeholder="0.00">
-                            <span class="absolute right-1 top-1/2 -translate-y-1/2 font-bold text-sm text-yellow-400">Bs.</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
+				<!-- Opción 2: Oferta con Tasa PROMEDIO (Dólares Físicos) - Amarillo -->
+				<div>
+					<label class="block text-xs mb-1 ml-1 font-semibold text-yellow-400">Precio de pago en Dólares Físicos (Tasa Promedio)</label>
+					<div class="input-group">
+						<!-- Campo USD (Principal - Editable) -->
+						<div class="relative">
+							<input type="number" id="price_avg_usd_input" class="input-dark input-usd-yellow w-full p-3 rounded-lg text-lg" placeholder="0.00">
+							<span class="absolute left-1 top-1/2 -translate-y-1/2 font-bold text-sm text-yellow-400">$</span>
+						</div>
+						<!-- Campo VES (Calculado con Promedio - Solo lectura) -->
+						<div class="relative">
+							<input type="text" id="price_avg_ves_input" class="input-dark input-readonly w-full p-3 rounded-lg text-lg text-yellow-400 font-bold" readonly placeholder="0.00">
+							<span class="absolute right-1 top-1/2 -translate-y-1/2 font-bold text-sm text-yellow-400">Bs.</span>
+						</div>
+					</div>
+				</div>
+			</section>
 
-            <!-- Botón de CÁLCULO (Ahora es el botón principal para avanzar) -->
-            <button id="btnCalculate" class="w-full py-4 rounded-xl font-bold text-white btn-primary shadow-lg mt-4 flex items-center justify-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v4a1 1 0 00.293.707l3 3a1 1 0 001.414-1.414L11 10.586V7z" clip-rule="evenodd" />
-                </svg>
-                Calcular Conveniencia
-            </button>
+			<!-- Botón de CÁLCULO -->
+			<button id="btnCalculate" class="w-full py-4 rounded-xl font-bold text-white btn-primary shadow-lg mt-4 flex items-center justify-center gap-2">
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+					<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v4a1 1 0 00.293.707l3 3a1 1 0 001.414-1.414L11 10.586V7z" clip-rule="evenodd" />
+				</svg>
+				Calcular Conveniencia
+			</button>
 
-        </div>
-        <!-- ============================================== -->
-        <!-- SECCIÓN 2: RESULTADOS Y CONTROLES (SECTION 2) -->
-        <!-- ============================================== -->
-        <div id="section2" class="space-y-4 hidden">
-            
-            <!-- Resultado del Análisis -->
-            <section>
-                <div class="card p-4 bg-slate-800/50 border-t-4 border-slate-600 transition-all duration-300" id="recommendationBox">
-                    <h2 class="text-lg font-bold text-center mb-3 text-white">Conviene pagar en:</h2>
-                    
-                    <div class="text-center py-2 px-4 rounded-lg font-bold text-lg animate-pulse mb-3" id="finalVerdict">
-                        ...
-                    </div>
-                    
-                    <p class="text-center text-xs text-slate-400 mt-2 font-semibold" id="savingsText"></p>
-                </div>
-            </section>
-            
-            <!-- Nuevo Recuadro de Cálculo de USDT -->
-            <section id="usdtTransferCard" class="mt-4">
-                <div class="card p-4 bg-slate-800/50 border-t-4 border-yellow-500/50 transition-all duration-300" id="usdtResultCard">
-                    <!-- Título Actualizado -->
-                    <h2 class="text-lg font-bold text-center mb-3 text-white">Costo Equivalente en USDT</h2>
-                    
-                    <div class="text-center py-2 px-4 rounded-lg font-bold text-xl bg-yellow-900/50 text-yellow-300" id="usdtTransferCost">
-                        $ 0.00
-                    </div>
+		</div>
+		<!-- ============================================== -->
+		<!-- SECCIÓN 2: RESULTADOS Y CONTROLES (OUTPUTS) -->
+		<!-- ============================================== -->
+		<div id="section2" class="space-y-4 hidden">
+			
+			<!-- Resultado del Análisis -->
+			<section>
+				<div class="card p-4 bg-slate-800/50 border-t-4 border-slate-600 transition-all duration-300" id="recommendationBox">
+					<h2 class="text-lg font-bold text-center mb-3 text-white">Conviene pagar en:</h2>
+					
+					<div class="text-center py-2 px-4 rounded-lg font-bold text-lg animate-pulse mb-3" id="finalVerdict">
+						...
+					</div>
+					
+					<p class="text-center text-xs text-slate-400 mt-2 font-semibold" id="savingsText"></p>
+				</div>
+			</section>
+			
+			<!-- Recuadro de Cálculo de USDT -->
+			<section id="usdtTransferCard" class="mt-4">
+				<div class="card p-4 bg-slate-800/50 border-t-4 border-yellow-500/50 transition-all duration-300" id="usdtResultCard">
+					<!-- Título Actualizado -->
+					<h2 class="text-lg font-bold text-center mb-3 text-white">Costo Equivalente en USDT</h2>
+					
+					<div class="text-center py-2 px-4 rounded-lg font-bold text-xl bg-yellow-900/50 text-yellow-300" id="usdtTransferCost">
+						$ 0.00
+					</div>
 
-                    <!-- Subtítulo AHORA CON ID PARA ACTUALIZACIÓN DINÁMICA -->
-                    <p class="text-center text-xs text-slate-400 mt-2" id="usdtSubtitle">Si piensas pagar en USDT, El monto indicado es el calculo más bajo en Bolívares.</p>
-                </div>
-            </section>
+					<!-- Subtítulo con el mensaje completo y resaltado -->
+					<p class="text-center text-xs text-slate-400 mt-2" id="usdtSubtitle">El monto indicado es el calculo más bajo en Bolívares.</p>
+				</div>
+			</section>
 
-            <!-- Controles de Edición/Reiniciar -->
-            <div class="grid grid-cols-2 gap-3 pt-4">
-                 <button id="btnEdit" class="w-full py-4 rounded-xl font-bold text-white btn-secondary shadow-lg flex items-center justify-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zm-5.646 7.05a1 1 0 00.273.805l.893.893a1 1 0 001.246-.118l4.47-4.47-2.828-2.828-4.47 4.47a1 1 0 00-.118 1.246l.893.893z" />
-                    </svg>
-                    Editar Valores
-                </button>
-                <button id="btnReset" class="w-full py-4 rounded-xl font-bold text-white btn-primary shadow-lg flex items-center justify-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
-                    </svg>
-                    Reiniciar Valores
-                </button>
-            </div>
-        </div>
-        
-    </main>
+			<!-- Controles de Edición/Reiniciar -->
+			<div class="grid grid-cols-2 gap-3 pt-4">
+				 <button id="btnEdit" class="w-full py-4 rounded-xl font-bold text-white btn-secondary shadow-lg flex items-center justify-center gap-2">
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+						<path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zm-5.646 7.05a1 1 0 00.273.805l.893.893a1 1 0 001.246-.118l4.47-4.47-2.828-2.828-4.47 4.47a1 1 0 00-.118 1.246l.893.893z" />
+					</svg>
+					Editar Valores
+				</button>
+				<button id="btnReset" class="w-full py-4 rounded-xl font-bold text-white btn-primary shadow-lg flex items-center justify-center gap-2">
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+						<path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
+					</svg>
+					Reiniciar Valores
+				</button>
+			</div>
+		</div>
+		
+	</main>
+
+	<!-- SCRIPT DE LÓGICA: Simulación de como_pago.js -->
+	<script>
+		// ==============================================
+		// LÓGICA JAVASCRIPT
+		// ==============================================
+		
+		// --- Constantes de Local Storage ---
+		const LS_KEY = 've_payment_calculator_state';
+
+		// --- Estado Global ---
+		const state = {
+			bcv: 0,
+			usdt: 0, 
+			avgRate: 0,
+			manualOverrideAvg: false, // Indica si el usuario editó manualmente la tasa promedio
+			
+			// Solo persistimos los USD (Oferta) que son los inputs primarios
+			price_bcv_usd: 0, 
+			price_avg_usd: 0, 
+		};
+
+		// --- Referencias a Elementos del DOM ---
+		const els = {
+			section1: document.getElementById('section1'),
+			section2: document.getElementById('section2'),
+			
+			bcvDisplay: document.getElementById('bcvDisplay'),
+			usdtDisplay: document.getElementById('usdtDisplay'),
+			bcvLoader: document.getElementById('bcvLoader'),
+			usdtLoader: document.getElementById('usdtLoader'),
+			rateDiff: document.getElementById('rateDiff'),
+			avgRateInput: document.getElementById('avgRateInput'),
+			
+			price_bcv_usd_input: document.getElementById('price_bcv_usd_input'),
+			price_bcv_ves_input: document.getElementById('price_bcv_ves_input'),
+			price_avg_usd_input: document.getElementById('price_avg_usd_input'),
+			price_avg_ves_input: document.getElementById('price_avg_ves_input'),
+			
+			recommendationBox: document.getElementById('recommendationBox'),
+			finalVerdict: document.getElementById('finalVerdict'),
+			savingsText: document.getElementById('savingsText'),
+
+			usdtResultCard: document.getElementById('usdtResultCard'), 
+			usdtTransferCost: document.getElementById('usdtTransferCost'),
+			usdtSubtitle: document.getElementById('usdtSubtitle'), 
+			
+			btnCalculate: document.getElementById('btnCalculate'),
+			btnEdit: document.getElementById('btnEdit'), 
+			btnReset: document.getElementById('btnReset')
+		};
+		
+		// --- Lógica de Persistencia Local (LocalStorage) ---
+
+		// Guarda el estado actual en localStorage con un debounce
+		let saveTimeout;
+		const DEBOUNCE_TIME = 800;
+
+		function saveState() {
+			clearTimeout(saveTimeout);
+			saveTimeout = setTimeout(() => {
+				const dataToSave = {
+					bcv: parseFloat(els.bcvDisplay.value) || 0,
+					usdt: parseFloat(els.usdtDisplay.value) || 0,
+					avgRate: parseFloat(els.avgRateInput.value) || 0,
+					price_bcv_usd: parseFloat(els.price_bcv_usd_input.value) || 0, 
+					price_avg_usd: parseFloat(els.price_avg_usd_input.value) || 0, 
+					manualOverrideAvg: state.manualOverrideAvg
+				};
+				try {
+					localStorage.setItem(LS_KEY, JSON.stringify(dataToSave));
+				} catch (e) {
+					console.error("Error al guardar en LocalStorage:", e);
+				}
+			}, DEBOUNCE_TIME);
+		}
+
+		// Carga el estado desde localStorage al inicio
+		function loadSavedState() {
+			let dataLoaded = false;
+			try {
+				const savedData = localStorage.getItem(LS_KEY);
+				if (savedData) {
+					const data = JSON.parse(savedData);
+					
+					state.manualOverrideAvg = data.manualOverrideAvg === true;
+					
+					// Asignar valores a los inputs (usando .value)
+					els.bcvDisplay.value = (data.bcv || 0).toFixed(2);
+					els.usdtDisplay.value = (data.usdt || 0).toFixed(2);
+					els.avgRateInput.value = (data.avgRate || 0).toFixed(2); 
+
+					// Cargar Precios (Solo los USD editables)
+					els.price_bcv_usd_input.value = (data.price_bcv_usd > 0) ? data.price_bcv_usd.toFixed(2) : '';
+					els.price_avg_usd_input.value = (data.price_avg_usd > 0) ? data.price_avg_usd.toFixed(2) : '';
+					
+					dataLoaded = true;
+				}
+			} catch (e) {
+				console.error("Error al cargar desde LocalStorage:", e);
+			}
+			updateDiff();
+			recalculateAvg(true); 
+			updateConversions(); 
+			return dataLoaded;
+		}
+		
+		// --- Funciones de API para Tasas ---
+
+		// Implementación de fetch con reintentos para manejar errores temporales
+		async function fetchWithRetry(url, options = {}, retries = 3) {
+			let delay = 1000;
+			for (let i = 0; i < retries; i++) {
+				try {
+					const response = await fetch(url, options);
+					if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+					return await response.json();
+				} catch (error) {
+					if (i === retries - 1) {
+						console.error("Error final en fetch:", error);
+						throw error;
+					}
+					await new Promise(resolve => setTimeout(resolve, delay));
+					delay *= 2; // Backoff exponencial
+				}
+			}
+		}
+		
+		// Obtiene las tasas de cambio BCV y P2P
+		async function fetchRates(isReset = false) {
+			showLoaders(true);
+			
+			let bcvVal = parseFloat(els.bcvDisplay.value) || 0; 
+			let usdtVal = parseFloat(els.usdtDisplay.value) || 0; 
+
+			// Usamos una API confiable para el dólar en Venezuela
+			const apiUrl = 'https://ve.dolarapi.com/v1/dolares'; 
+
+			try {
+				const data = await fetchWithRetry(apiUrl);
+				
+				const oficialRate = data.find(item => item.fuente === 'oficial');
+				const paraleloRate = data.find(item => item.fuente === 'paralelo');
+
+				if (oficialRate && oficialRate.promedio) {
+					bcvVal = parseFloat(oficialRate.promedio);
+				}
+				
+				if (paraleloRate && paraleloRate.promedio) {
+					usdtVal = parseFloat(paraleloRate.promedio);
+				}
+			} catch (error) {
+				console.error("Error obteniendo tasas del API. Usando valores guardados localmente o de fallback.", error);
+			} finally {
+				state.bcv = bcvVal;
+				state.usdt = usdtVal;
+				
+				els.bcvDisplay.value = state.bcv.toFixed(2);
+				els.usdtDisplay.value = state.usdt.toFixed(2);
+				
+				showLoaders(false);
+				updateDiff();
+				
+				// Si es un reinicio, forzamos el recálculo del promedio, ignorando el override manual.
+				if (isReset) {
+					state.manualOverrideAvg = false;
+				}
+				recalculateAvg();
+				updateConversions(); 
+				saveState(); // Guardar las tasas finales
+			}
+		}
+
+		// Muestra u oculta los indicadores de carga
+		function showLoaders(show) {
+			const opacity = show ? '1' : '0';
+			els.bcvLoader.style.opacity = opacity;
+			els.usdtLoader.style.opacity = opacity;
+		}
+
+		// Calcula y muestra la diferencia porcentual entre BCV y USDT
+		function updateDiff() {
+			const bcv = parseFloat(els.bcvDisplay.value) || 0;
+			const usdt = parseFloat(els.usdtDisplay.value) || 0;
+			
+			const diff = usdt - bcv;
+			const diffPerc = bcv > 0 ? (diff / bcv) * 100 : 0;
+			
+			let colorClass = 'text-slate-500';
+			if (diffPerc > 5) {
+				colorClass = 'text-red-400';
+			} else if (diffPerc > 1) {
+				colorClass = 'text-orange-400';
+			} else {
+				colorClass = 'text-green-400';
+			}
+			
+			els.rateDiff.innerHTML = `
+				<span class="${colorClass} font-bold">${diff.toFixed(2)} Bs</span> 
+				<span class="text-slate-500">(</span>
+				<span class="${colorClass} font-bold">${diffPerc.toFixed(2)}%</span>
+				<span class="text-slate-500">)</span>
+			`;
+		}
+
+		// --- Lógica de Cálculo y Conversión ---
+		
+		// Recalcula la Tasa Promedio para Dólares Físicos
+		function recalculateAvg(forceRecalculate = false) {
+			// Solo calcular si no hay un override manual, a menos que se fuerce.
+			if (state.manualOverrideAvg && !forceRecalculate) {
+				return; 
+			}
+
+			const currentBcv = parseFloat(els.bcvDisplay.value) || 0;
+			const currentUsdt = parseFloat(els.usdtDisplay.value) || 0;
+
+			// FÓRMULA: ((BCV + P2P) / 2) * 1.10 (Promedio simple con un 10% de margen)
+			const simpleAvg = (currentBcv + currentUsdt) / 2;
+			const rawAvg = simpleAvg * 1.10; 
+			
+			// Redondeamos a dos decimales
+			state.avgRate = Math.round((rawAvg + Number.EPSILON) * 100) / 100;
+			
+			els.avgRateInput.value = state.avgRate.toFixed(2);
+			updateConversions(null, true); 
+		}
+		
+		// Actualiza los campos de Bolívares basados en los precios en USD
+		function updateConversions(trigger = null, skipSave = false) {
+			const currentBcvRate = parseFloat(els.bcvDisplay.value);
+			const currentAvgRate = parseFloat(els.avgRateInput.value);
+
+			if (isNaN(currentBcvRate) || currentBcvRate <= 0 || isNaN(currentAvgRate) || currentAvgRate <= 0) {
+				 if (!skipSave) saveState();
+				 return;
+			}
+			
+			let val;
+			
+			// Opción 1 (BCV): USD (Editable) -> VES (Calculado)
+			val = parseFloat(els.price_bcv_usd_input.value) || 0;
+			els.price_bcv_ves_input.value = val > 0 ? (val * currentBcvRate).toFixed(2) : '';
+
+			// Opción 2 (Promedio): USD (Editable) -> VES (Calculado)
+			val = parseFloat(els.price_avg_usd_input.value) || 0;
+			els.price_avg_ves_input.value = val > 0 ? (val * currentAvgRate).toFixed(2) : '';
+			
+			if (!skipSave) {
+				saveState();
+			}
+		}
+
+		// Realiza el análisis de conveniencia y muestra los resultados
+		function analyzePayment() {
+			const optionBcv_Ves = parseFloat(els.price_bcv_ves_input.value);
+			const optionAvg_Ves = parseFloat(els.price_avg_ves_input.value);
+			const currentUsdtRate = parseFloat(els.usdtDisplay.value); // Tasa P2P/Binance
+			
+			// Validar que ambos campos de USD tengan valores > 0 antes de mostrar resultados
+			if (isNaN(optionBcv_Ves) || isNaN(optionAvg_Ves) || optionBcv_Ves === 0 || optionAvg_Ves === 0 || isNaN(currentUsdtRate) || currentUsdtRate <= 0) {
+				els.section1.classList.remove('hidden');
+				els.section2.classList.add('hidden'); 
+				// Podríamos mostrar un mensaje al usuario aquí en una interfaz no-alert
+				console.warn("Por favor, ingrese un valor de precio en Dólares ($) en ambas opciones y asegúrese de que las tasas estén cargadas.");
+				return;
+			}
+
+			// 1. Mostrar resultados
+			els.section1.classList.add('hidden');
+			els.section2.classList.remove('hidden');
+
+			// 2. Cálculo USDT Equivalente
+			const min_ves_cost = Math.min(optionBcv_Ves, optionAvg_Ves);
+			const usdtEquivalentCost = min_ves_cost / currentUsdtRate;
+			const usdtFormatted = usdtEquivalentCost.toFixed(2); 
+			
+			els.usdtTransferCost.textContent = `$ ${usdtFormatted}`;
+			
+			const newSubtitle = `
+				Si piensas pagar en USDT, el monto que debes transferir es de 
+				<span class="text-yellow-300 font-bold">$ ${usdtFormatted}</span> 
+				USDT, calculado en base al costo más bajo en Bolívares.
+			`;
+			els.usdtSubtitle.innerHTML = newSubtitle;
+			
+			// 3. Lógica de recomendación de pago
+			const box = els.recommendationBox;
+			const verdict = els.finalVerdict;
+			const savings = els.savingsText;
+
+			// Resetear clases y variables de diferencia
+			box.className = 'card p-4 bg-slate-800/50 border-t-4 transition-all duration-300';
+			verdict.classList.remove('text-green-400', 'text-blue-400', 'animate-pulse', 'text-white', 'text-yellow-400');
+			
+			const diffVes = Math.abs(optionBcv_Ves - optionAvg_Ves);
+			const maxVes = Math.max(optionBcv_Ves, optionAvg_Ves);
+			const diffPerc = (maxVes > 0) ? (diffVes / maxVes) * 100 : 0;
+			
+			// Funciones de formato
+			const vesFormat = (val) => val.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' Bs';
+			const percFormat = (val) => val.toFixed(2); 
+			
+			const currentRate = (optionBcv_Ves < optionAvg_Ves) ? parseFloat(els.bcvDisplay.value) : parseFloat(els.avgRateInput.value);
+			let usdEquivalent = currentRate > 0 ? diffVes / currentRate : 0;
+
+			if (optionBcv_Ves < optionAvg_Ves) {
+				// Gana BCV (Bolívares) - AZUL
+				const color = 'text-blue-400';
+				box.classList.add('border-blue-500', 'bg-blue-900/20'); 
+				
+				verdict.textContent = "Bolívares (Tasa Oficial)"; 
+				verdict.classList.add('text-blue-400');
+				
+				savings.innerHTML = `
+					**El costo es menor usando la tasa oficial**
+					<span class="text-xs block mt-1">
+						Ahorro Total: 
+						<span class="text-blue-300">${vesFormat(diffVes)}</span>
+						<br/>
+						<span class="text-slate-300 font-bold">(</span><span class="${color} font-bold">$ ${usdEquivalent.toFixed(2)}</span><span class="text-slate-300 font-bold">)</span>
+						<span class="text-slate-300 font-bold">→</span> 
+						<span class="${color} text-xs"> ${percFormat(diffPerc)}% menos</span>.
+					</span>
+					 <span class="text-[10px] block mt-1">
+						(Costo Bolívares: ${vesFormat(optionBcv_Ves)} | Costo Dólares: ${vesFormat(optionAvg_Ves)})
+					</span>
+				`;
+			} else if (optionAvg_Ves < optionBcv_Ves) {
+				// Gana Promedio (Dólares Físicos) - VERDE
+				const color = 'text-green-400';
+				box.classList.add('border-green-500', 'bg-green-900/20'); 
+				
+				verdict.textContent = "Dólares (Tasa Promedio)";
+				verdict.classList.add('text-green-400');
+
+				savings.innerHTML = `
+					**El costo es menor usando la tasa promedio**
+					<span class="text-xs block mt-1">
+						Ahorro Total: 
+						<span class="text-green-300">${vesFormat(diffVes)}</span>
+						<br/>
+						<span class="text-slate-300 font-bold">(</span><span class="${color} font-bold">$ ${usdEquivalent.toFixed(2)}</span><span class="text-slate-300 font-bold">)</span>
+						<span class="text-slate-300 font-bold">→</span>
+						<span class="${color} text-xs"> ${percFormat(diffPerc)}% menos</span>.
+					</span>
+					 <span class="text-[10px] block mt-1">
+						(Costo Bolívares: ${vesFormat(optionBcv_Ves)} | Costo Dólares: ${vesFormat(optionAvg_Ves)})
+					</span>
+				`;
+			} else {
+				// Precios iguales
+				box.classList.add('border-slate-600');
+				verdict.textContent = "Indistinto";
+				verdict.classList.add('text-white');
+				savings.textContent = `La diferencia es menor a 0.01 Bs, ambas opciones son igualmente convenientes.`;
+			}
+		}
+		
+		// --- Control de Navegación y Reseteo ---
+		
+		function showInputs() {
+			els.section1.classList.remove('hidden');
+			els.section2.classList.add('hidden');
+			// Forzar recálculo al volver
+			updateDiff();
+			recalculateAvg(true); 
+			updateConversions();
+		}
+
+		function handleResetValues() {
+			// 1. Resetear inputs de precio
+			els.price_bcv_usd_input.value = '';
+			els.price_bcv_ves_input.value = '';
+			els.price_avg_usd_input.value = '';
+			els.price_avg_ves_input.value = '';
+			
+			// 2. Resetear estado de override manual y fetch rates (que también actualiza tasas y promedio)
+			state.manualOverrideAvg = false;
+			fetchRates(true); // Pasar true para forzar el recálculo del promedio
+			
+			// 3. Mostrar inputs y ocultar resultados
+			showInputs();
+		}
+
+		// --- Event Listeners ---
+		
+		// Manejadores genéricos de input
+		const handleRateChange = () => { updateDiff(); recalculateAvg(); updateConversions(); saveState(); };
+		const handleOfferUsdChange = () => { updateConversions(); };
+
+		// Attach listeners para las tasas y los precios USD (para conversiones en tiempo real y persistencia)
+		['input', 'keyup'].forEach(evt => {
+			els.bcvDisplay.addEventListener(evt, handleRateChange);
+			els.usdtDisplay.addEventListener(evt, handleRateChange);
+			els.price_bcv_usd_input.addEventListener(evt, handleOfferUsdChange);
+			els.price_avg_usd_input.addEventListener(evt, handleOfferUsdChange);
+		});
+		
+		// Control para el override manual de la Tasa Promedio
+		els.avgRateInput.addEventListener('input', (e) => {
+			state.manualOverrideAvg = true; 
+			state.avgRate = parseFloat(e.target.value);
+			updateConversions(); 
+			saveState();
+		});
+		
+		// FUNCIONALIDAD: Calcular al presionar ENTER en el campo principal de la Oferta Promedio
+		els.price_avg_usd_input.addEventListener('keyup', (event) => {
+			// Usamos event.key === 'Enter' para compatibilidad moderna
+			if (event.key === 'Enter') {
+				event.preventDefault(); // Evita el comportamiento por defecto (ej. envío de formulario)
+				analyzePayment();
+			}
+		});
+
+		// Botones de control de flujo
+		els.btnCalculate.addEventListener('click', analyzePayment);
+		els.btnEdit.addEventListener('click', showInputs); 
+		els.btnReset.addEventListener('click', handleResetValues); 
+
+
+		document.addEventListener('DOMContentLoaded', () => {
+			loadSavedState(); 
+			// Si hay precios cargados, inicializa en la vista de inputs para que el usuario presione calcular
+			if (parseFloat(els.price_bcv_usd_input.value) > 0 || parseFloat(els.price_avg_usd_input.value) > 0) {
+				 showInputs();
+			} else {
+				 els.section2.classList.add('hidden');
+			}
+			// Siempre intenta obtener las tasas más recientes al cargar
+			fetchRates();
+		});
+
+	</script>
 </body>
-
 </html>
